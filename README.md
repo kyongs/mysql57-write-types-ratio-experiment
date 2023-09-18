@@ -13,11 +13,11 @@ Follow the guide below. If you have any questions, contact me via email. (kyongs
 
 
 1. Restart a MySQL server
-- Before starting a MySQL server, update the buffer pool size to 10% (then, 20%, 30%, 40%, 50%) of your TPC-C database size. For example, if you load 20 warehouses (e.g., about 2G database size), change the value of innodb_buffer_pool_size in my.cnf to 200M:
+- Before starting a MySQL server, update the buffer pool size to 10% (then,30%, 50%) of your TPC-C database size. For example, if you load 10 warehouses (e.g., about 1G database size), change the value of innodb_buffer_pool_size in my.cnf to 100M:
 ```bash
 $ vi /path/to/my.cnf
 ...
-innodb_buffer_pool_size=200M
+innodb_buffer_pool_size=100M
 ...
 ```
 
@@ -29,7 +29,7 @@ $ ./bin/mysqld_safe --defaults-file=/path/to/my.cnf
 2. Run the TPC-C benchmark
 Run the benchmark by modifying the experimental parameters to match your system specifications. For example:
 ```bash
-$ ./tpcc_start -h 127.0.0.1 -S /tmp/mysql.sock -d tpcc -u root -p "yourPassword" -w 20 -c 8 -r 10 -l 1200 | tee tpcc-result.txt
+$ ./tpcc_start -h 127.0.0.1 -S /tmp/mysql.sock -d tpcc -u root -p "yourPassword" -w 10 -c 8 -r 10 -l 1200 | tee tpcc-result.txt
 ```
 
 3. Monitor the buffer hit/miss ratio of MySQL
