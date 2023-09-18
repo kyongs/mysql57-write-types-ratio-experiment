@@ -10,10 +10,48 @@ Follow the guide below. If you have any questions, contact me via email. (kyongs
 
 
 ## Instructions
+1. First, add the codes that log the flush types.
+- You have to modify the  `mysql-5.7.33/storage/innobase/buf/buf0flu.cc`.
+- `HINT`: Add the fprintf code like the below example (buf0flu.cc: buf_flush_single_page_from_LRU()).
+
+```
+/******************************************************************//**
+This function picks up a single page from the tail of the LRU
+list, flushes it (if it is dirty), removes it from page_hash and LRU
+list and puts it on the free list. It is called from user threads when
+they are unable to find a replaceable page at the tail of the LRU
+list i.e.: when the background LRU flushing in the page_cleaner thread
+is not fast enough to keep pace with the workload.
+@return true if success. */
+bool
+buf_flush_single_page_from_LRU(
+/*===========================*/
+	buf_pool_t*	buf_pool)	/*!< in/out: buffer pool instance */
+{
+	ulint		scanned;
+	buf_page_t*	bpage;
+	ibool		freed;
+
+	buf_pool_mutex_enter(buf_pool);
+        fprintf(stderr, "single page flush\n"); //ADDED LINE
+  ...
+  
+	return(freed);
+
+}
+```
 
 
-1. Restart a MySQL server
-- Before starting a MySQL server, update the buffer pool size to 10% (then,30%, 50%) of your TPC-C database size. For example, if you load 10 warehouses (e.g., about 1G database size), change the value of innodb_buffer_pool_size in my.cnf to 100M:
+2. Rebuild the MySQL.
+```bash
+$ cd /path/to/mysql-basedir
+$ make -j install
+```
+
+3. Start a MySQL server.
+  - Before starting a MySQL server, update the buffer pool size to 10% (then,30%, 50%) of your TPC-C database size.
+  - For example, if you load 10 warehouses (e.g., about 1G database size), change the value of innodb_buffer_pool_size in my.cnf to 100M:
+
 ```bash
 $ vi /path/to/my.cnf
 ...
@@ -21,15 +59,15 @@ innodb_buffer_pool_size=100M
 ...
 ```
 
-- Start a MySQL server:
 ```bash
-$ ./bin/mysqld_safe --defaults-file=/path/to/my.cnf
+$ ./bin/mysqld_safe --default-file=/path/to/my.cnf
 ```
 
-2. Run the TPC-C benchmark
+
+4. Run the TPC-C benchmark
 Run the benchmark by modifying the experimental parameters to match your system specifications. For example:
 ```bash
-$ ./tpcc_start -h 127.0.0.1 -S /tmp/mysql.sock -d tpcc -u root -p "yourPassword" -w 10 -c 8 -r 10 -l 1200 | tee tpcc-result.txt
+$ ./tpcc_start -h 127.0.0.1 -S /tmp/mysql.sock -d tpcc -u root -p "yourPassword" -w 10 -c 8 -r 10 -l 600 | tee tpcc-result.txt
 ```
 
 3. Monitor the buffer hit/miss ratio of MySQL
