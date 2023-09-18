@@ -81,7 +81,7 @@ single page flush
 ...
 ```
 
-6. Calculate the ratio of three flush types. Refer to the following formulas.
+6. Calculate the ratio of three flush types. Refer to the following formulas. You can use `awk` command and `grep` command to easily get the required information.
    - `# of total flush` =  `# of flush list flush` + `# of LRU list flush` + `# of single page flush`
    - `ratio of flush list flush(%)` = `# of flush list flush` / `# of total flush` * 100
    - `ratio of LRU list flush(%)` = `# of LRU list flush` / `# of total flush` * 100
