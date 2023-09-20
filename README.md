@@ -1,7 +1,8 @@
 # mysql57-write-types-ratio-experiment
 
 
-2023 Fall SKKU Database Project
+- 2023 Fall SKKU Database Project
+- TA: Kyong-Shik Lee (kyongshikl@gmail.com)
 
 ## Overview
 This week, you will quantify the ratio of three disk write types in MySQL(single page flush, flush list flush, LRU list flush). You will first add some codes to print the flush types. After running TPC-C with modified MySQL source code, calcualte the ratio of three flush types in MySQL varying buffer pool size. (10%, 30%, 50%)
