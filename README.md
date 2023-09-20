@@ -8,6 +8,8 @@ This week, you will quantify the ratio of three disk write types in MySQL(single
 
 Follow the guide below. If you have any questions, contact me via email. (kyongshikl@gmail.com)
 
+For those who are still struggling with MySQL/TPC-C installation, please refer to the [link](https://github.com/kyongs/MySQL-TPCC-Installation).
+
 
 ## Instructions
 1. First, add the codes that log the flush types.
