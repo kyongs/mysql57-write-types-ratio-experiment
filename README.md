@@ -65,10 +65,17 @@ $ ./bin/mysqld_safe --default-file=/path/to/my.cnf
 
 
 4. Run the TPC-C benchmark
-Run the benchmark by modifying the experimental parameters to match your system specifications. For example:
+Run the benchmark by modifying the experimental parameters to match your system specifications. 
 ```bash
-$ ./tpcc_start -h 127.0.0.1 -S /tmp/mysql.sock -d tpcc -u root -p "yourPassword" -w 10 -c 8 -r 10 -l 300 | tee tpcc-result.txt
+$ ./tpcc_start -h 127.0.0.1 -S /tmp/mysql.sock -d tpcc -u root -p "yourPassword" -w 10 -c 8 -r 10 -l 600 | tee tpcc-result.txt
 ```
+
+Use the following tpc-c configuration:
+- warehouse: 10
+- connection: 8
+- ramp-up time: 10 sec
+- experiment time (-l): minimum 300 sec
+  > You should be able to monitor single-page flush when the buffer pool size is 10%. If the single-page flush is not occurring, you need to extend the experiment time.
 
 5. You can check if MySQL has been rebuilt sucessfully by looking at the `/path/to-test-data/mysql_error.log`.
 ```bash
@@ -87,12 +94,14 @@ single page flush
    - `ratio of LRU list flush(%)` = `# of LRU list flush` / `# of total flush` * 100
    - `ratio of single page flush(%)` = `# of single page flush` / `# of total flush` * 100
 
-4. After the benchmark ends, shut down the MySQL server:
+7. After the benchmark ends, shut down the MySQL server:
 ```bash
 $ ./bin/mysqladmin -uroot -pyourPassword shutdown
 or
 $ sudo killall mysqld
 ```
+
+8. Vary buffer pool size and repeat the procress, starting from step 3.
 
 ## Reference
 - https://www.percona.com/blog/tpcc-mysql-simple-usage-steps-and-how-to-build-graphs-with-gnuplot/
